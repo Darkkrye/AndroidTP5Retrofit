@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Get Views
         ButterKnife.bind(this);
-
-        et_username.setText("Test");
     }
 
     @OnClick(R.id.btn_search)
