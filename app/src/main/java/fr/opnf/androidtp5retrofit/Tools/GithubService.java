@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 public interface GithubService {
 
     public final static String ENDPOINT = "https://api.github.com";
-    public final static String TOKEN = "token 310494ef609e93b2c359e2527b2f59371e5253fa";
+    public final static String TOKEN = "";
     public final static String SEARCHEDUSER = "Darkkrye";
 
     @GET("users/{username}")
