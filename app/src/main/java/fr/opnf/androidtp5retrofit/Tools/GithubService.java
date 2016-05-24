@@ -13,7 +13,6 @@ public interface GithubService {
 
     public final static String ENDPOINT = "https://api.github.com";
     public final static String TOKEN = "";
-    public final static String SEARCHEDUSER = "Darkkrye";
 
     @GET("users/{username}")
     Call<User> getUser(@Header("authorization") String authorization, @Path("username") String username);

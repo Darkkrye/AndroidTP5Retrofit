@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.opnf.androidtp5retrofit.Model.User;
 import fr.opnf.androidtp5retrofit.Tools.GithubService;
@@ -28,21 +31,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Views
-    LinearLayout ll_searchLayout;
-    LinearLayout ll_result_layout;
+    @BindView(R.id.ll_search_layout) LinearLayout ll_search_layout;
+    @BindView(R.id.ll_result_layout) LinearLayout ll_result_layout;
 
-    ProgressBar pb_loading;
+    @BindView(R.id.pb_loading) ProgressBar pb_loading;
 
-    EditText et_username;
+    @BindView(R.id.et_username) EditText et_username;
 
-    Button btn_search;
-    Button btn_github_redirect;
+    @BindView(R.id.btn_search) Button btn_search;
+    @BindView(R.id.btn_github_redirect) Button btn_github_redirect;
 
-    CircleImageView civ_profile_image;
+    @BindView(R.id.civ_profile_image) CircleImageView civ_profile_image;
 
-    TextView tv_name;
-    TextView tv_pseudo;
-    TextView tv_followers;
+    @BindView(R.id.tv_name) TextView tv_name;
+    @BindView(R.id.tv_pseudo) TextView tv_pseudo;
+    @BindView(R.id.tv_followers) TextView tv_followers;
 
     // Variables
     User user;
@@ -53,50 +56,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get Views
-        this.ll_searchLayout = (LinearLayout) findViewById(R.id.ll_search_layout);
-        this.ll_result_layout = (LinearLayout) findViewById(R.id.ll_result_layout);
+        ButterKnife.bind(this);
 
-        this.pb_loading = (ProgressBar) findViewById(R.id.pb_loading);
+        et_username.setText("Test");
+    }
 
-        this.et_username = (EditText) findViewById(R.id.et_username);
+    @OnClick(R.id.btn_search)
+    public void search(View view) {
+        // Show / Hide
+        pb_loading.setVisibility(View.VISIBLE);
+        hideKeyboard();
 
-        this.btn_search = (Button) findViewById(R.id.btn_search);
-        this.btn_github_redirect = (Button) findViewById(R.id.btn_github_redirect);
+        String username = et_username.getText().toString().trim();
+        if (username.isEmpty())
+            showError("Please write a username");
+        else {
+            search(username);
+        }
+    }
 
-        this.civ_profile_image = (CircleImageView) findViewById(R.id.civ_profile_image);
-
-        this.tv_name = (TextView) findViewById(R.id.tv_name);
-        this.tv_pseudo = (TextView) findViewById(R.id.tv_pseudo);
-        this.tv_followers = (TextView) findViewById(R.id.tv_followers);
-
-        btn_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show / Hide
-                pb_loading.setVisibility(View.VISIBLE);
-                hideKeyboard();
-
-                String username = et_username.getText().toString().trim();
-                if (username.isEmpty())
-                    showError("Please write a username");
-                else {
-                    search(username);
-                }
-            }
-        });
-
-        btn_github_redirect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (user != null) {
-                    Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(user.getHtml_url()));
-                    startActivity(viewIntent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Vous essayez d'accéder à quelque chose auquel vous n'avez pas le droit :P", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    @OnClick(R.id.btn_github_redirect)
+    public void githubRedirect(View view) {
+        if (user != null) {
+            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(user.getHtml_url()));
+            startActivity(viewIntent);
+        } else {
+            Toast.makeText(getApplicationContext(), "Vous essayez d'accéder à quelque chose auquel vous n'avez pas le droit :P", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void search(String username) {
@@ -164,6 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(this.ll_searchLayout.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(this.ll_search_layout.getWindowToken(), 0);
     }
 }
